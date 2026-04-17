@@ -1,7 +1,7 @@
 module alu4bit(
     input [3:0] a,b,
     input [1:0] sel,
-    input clk,reset,
+    input clk, reset,
     output reg [3:0] sum,
     output reg carryout
 );
@@ -19,7 +19,10 @@ always@(*) begin
             end
             2'b10:{tempcarryout,tempsum}=a&b;//and
             2'b11:{tempcarryout,tempsum}=a|b;//or
-            default:sum=4'b0000;
+            default: begin
+                tempsum=4'b0000;
+                tempcarryout = 1'b0;
+            end
         endcase
     end
     always@(posedge clk or posedge reset) begin
@@ -27,7 +30,7 @@ always@(*) begin
             sum <= 4'b0000;
             carryout <= 1'b0;
         end
-        if(clk) begin
+        else begin
             sum <= tempsum;
             carryout <= tempcarryout;
         end
